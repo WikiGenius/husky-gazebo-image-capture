@@ -1,4 +1,4 @@
 pynput==1.7.6
 # --- add future deps here, e.g. ---
 opencv-python
-numpy
+numpy<2
