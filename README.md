@@ -2,8 +2,6 @@
 
 ROS 2 Humble node for driving a simulated Husky robot in Gazebo and capturing image/odometry snapshots.
 
-This repository was previously named `orb_slam_demo`, but that name was misleading. The repository does not contain ORB-SLAM code, an ORB-SLAM training pipeline, or a SLAM backend. Its actual role is to collect camera images and pose metadata that can later support visual-SLAM or ORB-SLAM-related experiments outside this repo.
-
 ## Purpose
 
 This repo provides a small public-safe ROS 2 utility for:
