@@ -1,70 +1,179 @@
-# ORB-SLAM Demo
+# Husky Gazebo Image Capture
 
-## Overview
-This repository is a ROS 2 Humble scaffold for ORB-SLAM-style visual state-estimation experiments. It is kept public as supporting evidence for the state-estimation side of a robotics research portfolio focused on mobile manipulation, active perception, and structure-aware scanning.
+ROS 2 Humble node for driving a simulated Husky robot in Gazebo and capturing image/odometry snapshots.
 
-The repository is intentionally lightweight and public-safe. It should be used as a place to document reproducible SLAM demo workflows without exposing unpublished research code or private datasets.
+This repository was previously named `orb_slam_demo`, but that name was misleading. The repository does not contain ORB-SLAM code, an ORB-SLAM training pipeline, or a SLAM backend. Its actual role is to collect camera images and pose metadata that can later support visual-SLAM or ORB-SLAM-related experiments outside this repo.
 
-## Research/Engineering Motivation
-Active scanning and mobile manipulation depend on reliable robot and camera state estimates. Visual SLAM methods such as ORB-SLAM connect camera motion, feature tracking, map structure, and localization quality.
+## Purpose
 
-This demo supports the broader research direction by providing a public ROS 2 place to experiment with visual state estimation and its relationship to scan planning.
+This repo provides a small public-safe ROS 2 utility for:
 
-## Features
-- ROS 2 Humble package scaffold.
-- Python/ROS 2 dependencies for geometry messages and state-estimation demos.
-- Public structure for future launch files, datasets, and demo notes.
-- Intended integration point for visual SLAM experiments.
+- keyboard driving a Husky-style mobile robot,
+- subscribing to a camera image topic,
+- subscribing to Husky odometry,
+- saving image snapshots on demand,
+- logging matching pose metadata to `poses.csv`.
 
-## Method
-The planned workflow is:
+The captured images may be useful as input data for later ORB-SLAM experiments in Gazebo, but those experiments are not implemented here.
 
-1. Provide an image/video or camera stream.
-2. Run a visual SLAM or pose-estimation node.
-3. Publish or record pose estimates.
-4. Compare estimated motion with expected robot/camera motion.
-5. Document failure cases, uncertainty, and sensing constraints.
+## Relation to My Research Direction
+
+My research direction includes mobile manipulation, active sensing, state estimation, and structure-aware scanning.
+
+This repository supports that direction at the data-collection layer:
+
+- mobile robot operation in simulation,
+- camera image capture,
+- pose/odometry logging,
+- snapshot datasets for visual-state-estimation experiments,
+- public supporting evidence for ROS 2 robotics workflow practice.
+
+## What This Repository Is
+
+- A ROS 2 Humble package.
+- A Husky/Gazebo image capture utility.
+- A keyboard teleoperation and snapshot node.
+- A public support repo for later visual-SLAM dataset work.
+
+## What This Repository Is Not
+
+- It is not an ORB-SLAM implementation.
+- It is not an ORB-SLAM3 wrapper.
+- It is not a visual-SLAM backend.
+- It is not a map-building or localization benchmark.
+- It does not contain private datasets or unpublished research results.
+
+## Implemented Now
+
+- [x] `drive_and_snap` ROS 2 node.
+- [x] Keyboard driving through `/cmd_vel`.
+- [x] Camera subscription from `/camera/color/image_raw`.
+- [x] Odometry subscription from `/husky_velocity_controller/odom`.
+- [x] Snapshot capture using the `P` key.
+- [x] PNG image saving.
+- [x] Pose logging to `poses.csv`.
+- [ ] ORB-SLAM execution.
+- [ ] Visual-SLAM evaluation.
+- [ ] Trajectory comparison.
+- [ ] Dataset release.
+
+## Node Behavior
+
+The node:
+
+1. publishes velocity commands to `/cmd_vel`,
+2. stores the latest image from `/camera/color/image_raw`,
+3. stores the latest odometry from `/husky_velocity_controller/odom`,
+4. saves the current image when `P` is pressed,
+5. appends the image filename and pose to `poses.csv`.
+
+Keyboard controls:
+
+| Key | Action |
+|---|---|
+| `W` | drive forward |
+| `S` | drive backward |
+| `A` / `Q` | rotate left |
+| `D` / `E` | rotate right |
+| `Space` | stop |
+| `P` | save snapshot |
+| `Esc` | quit |
+
+## Output Format
+
+Snapshots are saved as PNG images.
+
+Pose metadata is appended to:
+
+```text
+poses.csv
+```
+
+CSV columns:
+
+```text
+timestamp,filename,x,y,z,qx,qy,qz,qw
+```
+
+By default, output is saved under:
+
+```text
+~/husky_snaps/
+```
+
+The output directory can be overridden with:
+
+```bash
+export HUSKY_SNAP_DIR=/path/to/output
+```
+
+## Current Contents
+
+```text
+src/drive_and_snap.py   ROS 2 node for Husky driving and snapshot capture
+package.xml             ROS 2 package metadata
+CMakeLists.txt          ROS 2 install configuration
+requirements.txt        Python helper dependencies
+```
 
 ## Installation
-Create or enter a ROS 2 workspace:
+
+Create or enter a ROS 2 Humble workspace:
 
 ```bash
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
-git clone https://github.com/WikiGenius/orb_slam_demo.git
+git clone https://github.com/WikiGenius/husky-gazebo-image-capture.git
 cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
-colcon build --packages-select orb_slam_demo
+python -m pip install -r src/husky-gazebo-image-capture/requirements.txt
+colcon build --packages-select husky_gazebo_image_capture
 source install/setup.bash
 ```
 
 ## Run
-Planned run pattern after demo nodes/launch files are added:
 
-```bash
-ros2 launch orb_slam_demo demo.launch.py
+Start a Husky/Gazebo simulation separately so that the required topics are available.
+
+Expected topics:
+
+```text
+/cmd_vel
+/camera/color/image_raw
+/husky_velocity_controller/odom
 ```
 
-Until then, use this repository as a public scaffold for ROS 2 visual-SLAM experiments.
+Run the node:
 
-## Results
-Future public results can include:
+```bash
+ros2 run husky_gazebo_image_capture drive_and_snap.py
+```
 
-- camera trajectory plots,
-- RViz screenshots,
-- pose-estimation logs,
-- notes on tracking failures and viewpoint constraints.
+Press `P` while driving to save image/odometry snapshots.
+
+## Use With ORB-SLAM Workflows
+
+The images captured by this node can be used later in ORB-SLAM or visual-SLAM experiments.
+
+That later workflow is outside this repository. This repo only handles Gazebo/Husky driving, image capture, and odometry logging.
 
 ## Limitations
-- This is currently a scaffold, not a complete ORB-SLAM release.
-- Private datasets and unpublished experiments are intentionally omitted.
-- SLAM backend integration still needs to be documented.
+
+- The repository assumes a Husky/Gazebo setup is already running.
+- Topic names are currently fixed in `src/drive_and_snap.py`.
+- It does not include ORB-SLAM code.
+- It does not include a SLAM training or evaluation pipeline.
+- It does not include released datasets.
+- It does not report benchmark results.
 
 ## Roadmap
-- [ ] Add launch workflow.
-- [ ] Add minimal camera-stream example.
-- [ ] Add trajectory visualization.
-- [ ] Add notes on SLAM failure modes under scanning constraints.
+
+- [ ] Make topic names configurable through ROS 2 parameters.
+- [ ] Add launch file after the simulation setup is stable.
+- [ ] Add a short dataset-folder convention.
+- [ ] Add example snapshot metadata from a non-private toy run.
+- [ ] Document how exported images can be prepared for visual-SLAM experiments.
 
 ## Citation / Acknowledgment
-Acknowledge ORB-SLAM, ROS 2, and any visual-SLAM libraries or datasets used when implementation details are added.
+
+Acknowledge Husky, ROS 2, Gazebo, OpenCV, and any visual-SLAM tools used in downstream experiments.

@@ -3,7 +3,7 @@
 DriveAndSnap ROS2 node
 - Teleoperate Husky with keyboard (W/A/S/D/Q/E, SPACE to stop, ESC to quit)
 - Press 'P' to capture synced image + odometry
-- Saves images to ~/husky_snaps/ and logs poses.csv
+- Saves images to HUSKY_SNAP_DIR or ~/husky_snaps/ and logs poses.csv
 """
 import os
 import sys
@@ -26,8 +26,7 @@ LIN_VEL     = 0.5    # m/s forward/backward speed
 ANG_VEL     = 1.0    # rad/s rotation speed
 PUB_FREQ    = 10.0   # Hz for cmd_vel publishing
 SNAP_KEY    = 'p'    # key to capture snapshot
-PARENT_DIR = '/home/elyamani/Main/programming/ros2_ws/husky_ws'
-SNAP_DIR    = os.path.expanduser(f'{PARENT_DIR}/husky_snaps')
+SNAP_DIR    = os.path.expanduser(os.environ.get('HUSKY_SNAP_DIR', '~/husky_snaps'))
 CSV_FIELDS  = ['timestamp','filename','x','y','z','qx','qy','qz','qw']
 
 
