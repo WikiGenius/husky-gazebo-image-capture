@@ -14,6 +14,14 @@ This repo provides a small public-safe ROS 2 utility for:
 
 The captured images may be useful as input data for later ORB-SLAM experiments in Gazebo, but those experiments are not implemented here.
 
+## Visual Evidence
+
+The media below shows the Gazebo/RViz workflow used around this capture utility. It documents the simulation, camera visualization, and topic inspection context; it is not a SLAM result or benchmark.
+
+| 10-second Gazebo/RViz workflow | Gazebo/RViz snapshot |
+|---|---|
+| <img src="media/husky_gazebo_capture_demo.gif" alt="10-second Husky Gazebo and RViz capture workflow" width="460"> | <img src="media/gazebo_rviz_snapshot.png" alt="Gazebo terrain, RViz camera panels, and topic terminal output" width="460"> |
+
 ## Relation to My Research Direction
 
 My research direction includes mobile manipulation, active sensing, state estimation, and structure-aware scanning.
@@ -112,6 +120,7 @@ src/drive_and_snap.py   ROS 2 node for Husky driving and snapshot capture
 package.xml             ROS 2 package metadata
 CMakeLists.txt          ROS 2 install configuration
 requirements.txt        Python helper dependencies
+media/                  public README visuals from Gazebo/RViz workflow
 ```
 
 ## Installation
@@ -163,6 +172,7 @@ That later workflow is outside this repository. This repo only handles Gazebo/Hu
 - It does not include a SLAM training or evaluation pipeline.
 - It does not include released datasets.
 - It does not report benchmark results.
+- The included media are workflow visuals, not quantitative evaluation.
 
 ## Roadmap
 
