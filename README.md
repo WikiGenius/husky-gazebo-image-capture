@@ -18,9 +18,13 @@ The captured images may be useful as input data for later ORB-SLAM experiments i
 
 The media below shows the Gazebo/RViz workflow used around this capture utility. It documents the simulation, camera visualization, and topic inspection context; it is not a SLAM result or benchmark.
 
-| 10-second Gazebo/RViz workflow | Gazebo/RViz snapshot |
-|---|---|
-| <img src="media/husky_gazebo_capture_demo.gif" alt="10-second Husky Gazebo and RViz capture workflow" width="460"> | <img src="media/gazebo_rviz_snapshot.png" alt="Gazebo terrain, RViz camera panels, and topic terminal output" width="460"> |
+The GIF compresses the full `2 min 11 sec` recording into a `10 sec` overview.
+
+![Accelerated full Gazebo/RViz capture workflow](media/husky_gazebo_capture_demo.gif)
+
+Static view of the same workflow context:
+
+![Gazebo terrain, RViz camera panels, and topic terminal output](media/gazebo_rviz_snapshot.png)
 
 ## Relation to My Research Direction
 
